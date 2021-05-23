@@ -7,7 +7,7 @@ import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.regions.Region;
 
-public class BaseIntegrationTest {
+public class InfrastructureTestBase {
     /*
     CONTAINERS
      */
@@ -35,6 +35,11 @@ public class BaseIntegrationTest {
                     String.format(
                             "infrastructure.aws.s3-endpoint=%s",
                             LOCAL_STACK_CONTAINER.getEndpointConfiguration(LocalStackContainer.Service.S3)
+                                    .getServiceEndpoint()
+                    ),
+                    String.format(
+                            "infrastructure.aws.sqs-endpoint=%s",
+                            LOCAL_STACK_CONTAINER.getEndpointConfiguration(LocalStackContainer.Service.SQS)
                                     .getServiceEndpoint()
                     )
             );
