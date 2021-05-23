@@ -1,0 +1,9 @@
+infrastructure:
+  aws:
+    region: eu-central-1
+    sqs-endpoint: http://localhost:4576
+    s3-endpoint: http://localhost:4572
+
+logging:
+  level:
+    root=debug:

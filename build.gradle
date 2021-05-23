@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.5.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id "io.freefair.lombok" version "5.3.3.3"
 }
 
 group = 'com.michalz'
@@ -27,12 +28,19 @@ ext {
 
 dependencies {
 	//AWS
-    implementation platform 'software.amazon.awssdk:bom:2.10.32'
+    implementation platform('software.amazon.awssdk:bom:2.16.68')
+    implementation 'software.amazon.awssdk:aws-core'
+    implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:sqs'
 
 	//Spring
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE'
 //	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+    //Other
     compileOnly 'org.projectlombok:lombok'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -40,8 +48,9 @@ dependencies {
 	//Tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:localstack'
 
-	integrationTestAnnotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
     integrationTestCompile 'org.springframework.boot:spring-boot-starter-test'
 
@@ -72,8 +81,6 @@ task integrationTest(type: Test) {
 
     setTestClassesDirs(sourceSets.integrationTest.output)
     classpath = sourceSets.integrationTest.runtimeClasspath
-
-    shouldRunAfter assemble
 
     testLogging {
         events "passed", "skipped", "failed"
