@@ -1,0 +1,16 @@
+version: '3.6'
+
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "8090:8090"
+      - "4567-4597:4567-4597"
+    environment:
+      - SERVICES=s3,sqs
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - PORT_WEB_UI=8090
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
