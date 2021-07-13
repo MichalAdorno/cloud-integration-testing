@@ -10,7 +10,7 @@ import software.amazon.awssdk.services.sqs.SqsClientBuilder;
 public class AwsConfiguration {
 
     @Bean
-    SqsClient sqsClient(final AwsConfigurationProperties awsConfigurationProperties){
+    public SqsClient sqsClient(final AwsConfigurationProperties awsConfigurationProperties){
         final SqsClientBuilder builder = SqsClient.builder()
                 .region(Region.of(awsConfigurationProperties.getRegion()));
 

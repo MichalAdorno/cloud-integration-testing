@@ -3,6 +3,7 @@ infrastructure:
     region: eu-central-1
     sqs-endpoint: http://localhost:4576
     s3-endpoint: http://localhost:4572
+    queue-name: SET
 
 logging:
   level:

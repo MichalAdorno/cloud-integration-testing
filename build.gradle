@@ -76,13 +76,15 @@ sourceSets {
 }
 
 task integrationTest(type: Test) {
+    useJUnitPlatform()
+
     description = 'Runs integration tests.'
     group = 'verification'
 
-    useJUnitPlatform()
-
     setTestClassesDirs(sourceSets.integrationTest.output)
     classpath = sourceSets.integrationTest.runtimeClasspath
+
+    check.dependsOn(it)
 
     testLogging {
         events "passed", "skipped", "failed"
@@ -94,8 +96,6 @@ task integrationTest(type: Test) {
 
     }
 }
-
-check.dependsOn(integrationTest)
 
 test {
     useJUnitPlatform()
