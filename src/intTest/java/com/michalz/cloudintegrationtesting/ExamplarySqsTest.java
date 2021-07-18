@@ -3,22 +3,22 @@ package com.michalz.cloudintegrationtesting;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.CreateQueueRequest;
+import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Testcontainers
-@ContextConfiguration(initializers = {ExamplarySqsTest.Initializer.class})
+@ContextConfiguration(initializers = {InfrastructureTestBase.Initializer.class})
 @Slf4j
 public class ExamplarySqsTest extends IntegrationTestBase {
 
@@ -42,10 +42,17 @@ public class ExamplarySqsTest extends IntegrationTestBase {
                 .queueUrl();
         log.info("[INTEGRATION TEST] Test queue: {}", testSqsQueue);
         log.info("[INTEGRATION TEST] Test queue: {}", QUEUE_NAME);
+
+        String queueUrl = testSqsClient.getQueueUrl(GetQueueUrlRequest.builder()
+                .queueName(QUEUE_NAME)
+                .build())
+                .queueUrl();
+        log.info("[INTEGRATION TEST get queue url] Test queue: {}", queueUrl);
+
     }
 
     @Test
-    void testMessageSendAndReceive(){
+    void testMessageSendAndReceive() {
         //given
         var message = "This is a test message";
         //send
@@ -56,25 +63,13 @@ public class ExamplarySqsTest extends IntegrationTestBase {
                 .expectStatus().isOk();
 
         //receive
-        getWebTestClient()
+        var result = getWebTestClient()
                 .get()
                 .uri("/aws/sqs?queueName={queueName}", QUEUE_NAME)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody().json(message);
-
-    }
-
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-        @Override
-        public void initialize(ConfigurableApplicationContext applicationContext) {
-            TestPropertyValues.of(
-                    String.format(
-                            "infrastructure.aws.queue-name=%s",
-                            QUEUE_NAME
-                    )
-            ).applyTo(applicationContext.getEnvironment());
-        }
+                .expectBody().returnResult();
+        assertThat(new String(result.getResponseBodyContent())).isEqualTo(message);
+        log.info("Received message payload: {}", new String(result.getResponseBodyContent()));
     }
 }

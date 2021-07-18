@@ -27,15 +27,15 @@ ext {
 }
 
 dependencies {
-	//AWS
+    //AWS
     implementation platform('software.amazon.awssdk:bom:2.16.68')
     implementation 'software.amazon.awssdk:aws-core'
     implementation 'software.amazon.awssdk:s3'
     implementation 'software.amazon.awssdk:sqs'
 
-	//Spring
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    //Spring
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE'
 
@@ -44,7 +44,7 @@ dependencies {
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-	//Tests
+    //Tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:localstack'
@@ -55,6 +55,7 @@ dependencies {
 
     integrationTestImplementation 'org.springframework.boot:spring-boot-starter-webflux'
     integrationTestImplementation 'org.awaitility:awaitility'
+    integrationTestImplementation 'org.assertj:assertj-core:3.20.2'
 }
 
 dependencyManagement {

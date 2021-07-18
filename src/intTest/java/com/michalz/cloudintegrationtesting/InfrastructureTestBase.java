@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.annotation.Order;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.regions.Region;
@@ -18,7 +19,6 @@ public class InfrastructureTestBase {
                     LocalStackContainer.Service.S3,
                     LocalStackContainer.Service.SQS)
             .withEnv("DEFAULT_REGION", Region.EU_CENTRAL_1.id());
-//            .withEnv("AWS_PROFILE", "localstack");
 
     /*
     CONTAINER INITIALIZATION FOR INTEGRATION TESTS
@@ -30,6 +30,7 @@ public class InfrastructureTestBase {
     /*
      SPRING CONTEXT INITIALIZER
      */
+    @Order(0)
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         @Override
@@ -40,16 +41,14 @@ public class InfrastructureTestBase {
                     LOCAL_STACK_CONTAINER.getEndpointConfiguration(LocalStackContainer.Service.SQS).getServiceEndpoint());
             TestPropertyValues.of(
                     String.format(
-                            "infrastructure.aws.s3-endpoint=%s",
+                            "infrastructure.aws.s3-endpoint: %s",
                             LOCAL_STACK_CONTAINER.getEndpointConfiguration(LocalStackContainer.Service.S3)
-                                    .getServiceEndpoint()
-                    ),
+                                    .getServiceEndpoint()),
                     String.format(
-                            "infrastructure.aws.sqs-endpoint=%s",
+                            "infrastructure.aws.sqs-endpoint: %s",
                             LOCAL_STACK_CONTAINER.getEndpointConfiguration(LocalStackContainer.Service.SQS)
-                                    .getServiceEndpoint()
-                    )
-            );
+                                    .getServiceEndpoint())
+            ).applyTo(applicationContext);
         }
 
     }

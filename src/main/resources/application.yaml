@@ -1,8 +1,8 @@
 infrastructure:
   aws:
     region: eu-central-1
-#    sqs-endpoint: http://localhost:4576
-#    s3-endpoint: http://localhost:4572
+    sqs-endpoint: http://localhost:4576
+    s3-endpoint: http://localhost:4572
     queue-name: SET
     akid: ${AWS_ACCESS_KEY_ID:test}
     secret: ${AWS_SECRET_KEY:test}
