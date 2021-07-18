@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 public class CloudIntegrationTestingApplication {
 
 	public static void main(String[] args) {
-
+		SpringApplication.run(CloudIntegrationTestingApplication.class, args);
 	}
 
 }

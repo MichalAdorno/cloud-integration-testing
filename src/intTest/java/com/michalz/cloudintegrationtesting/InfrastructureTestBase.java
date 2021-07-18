@@ -18,6 +18,7 @@ public class InfrastructureTestBase {
                     LocalStackContainer.Service.S3,
                     LocalStackContainer.Service.SQS)
             .withEnv("DEFAULT_REGION", Region.EU_CENTRAL_1.id());
+//            .withEnv("AWS_PROFILE", "localstack");
 
     /*
     CONTAINER INITIALIZATION FOR INTEGRATION TESTS

@@ -17,11 +17,15 @@ public class AwsConfigurationProperties {
     private final URI sqsEndpoint;
     @NotBlank
     private final String region;
+    private final String akid;
+    private final String secret;
 
-    public AwsConfigurationProperties(URI s3Endpoint, URI sqsEndpoint, String region) {
+    public AwsConfigurationProperties(URI s3Endpoint, URI sqsEndpoint, String region, String akid, String secret) {
         this.s3Endpoint = s3Endpoint;
         this.sqsEndpoint = sqsEndpoint;
         this.region = region;
+        this.akid = akid;
+        this.secret = secret;
     }
 
     public URI getS3Endpoint() {
@@ -34,5 +38,13 @@ public class AwsConfigurationProperties {
 
     public String getRegion() {
         return this.region;
+    }
+
+    public String getAkid() {
+        return this.akid;
+    }
+
+    public String getSecret() {
+        return this.secret;
     }
 }

@@ -19,3 +19,8 @@ docker-compose up localstack
 ```
 
 ## 
+
+```
+aws s3 ls --endpoint-url http://localhost:4576
+aws sqs list-queues
+```

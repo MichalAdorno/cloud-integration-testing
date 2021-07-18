@@ -30,16 +30,18 @@ public class ExamplarySqsTest extends IntegrationTestBase {
     @BeforeAll
     static void setUpTestSqs() throws URISyntaxException {
         endpointOverride = LOCAL_STACK_CONTAINER.getEndpointConfiguration(LocalStackContainer.Service.S3).getServiceEndpoint();
+
         testSqsClient = SqsClient.builder()
                 .region(Region.EU_CENTRAL_1)
                 .endpointOverride(new URI(endpointOverride))
                 .build();
-        log.info("[LOCALSTACK] SQS endpoint override {}", endpointOverride);
+        log.info("[INTEGRATION TEST] SQS endpoint override {}", endpointOverride);
         testSqsQueue = testSqsClient.createQueue(CreateQueueRequest.builder()
                 .queueName(QUEUE_NAME)
                 .build())
                 .queueUrl();
-        log.info("[LOCALSTACK] Test queue: {}", QUEUE_NAME);
+        log.info("[INTEGRATION TEST] Test queue: {}", testSqsQueue);
+        log.info("[INTEGRATION TEST] Test queue: {}", QUEUE_NAME);
     }
 
     @Test
@@ -49,14 +51,14 @@ public class ExamplarySqsTest extends IntegrationTestBase {
         //send
         getWebTestClient()
                 .post()
-                .uri("/aws/sqs?m={message}&q={queueName}", message, QUEUE_NAME)
+                .uri("/aws/sqs?messageBody={message}&queueName={queueName}", message, QUEUE_NAME)
                 .exchange()
                 .expectStatus().isOk();
 
         //receive
         getWebTestClient()
                 .get()
-                .uri("/aws/sqs?q={queueName}", QUEUE_NAME)
+                .uri("/aws/sqs?queueName={queueName}", QUEUE_NAME)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().json(message);
